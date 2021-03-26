@@ -17,40 +17,40 @@ return {
 		--debug_console服务
 		debug_console = {
 			[1] = {port=10701, node = "node1"},
-			[2] = {port=10702, node = "node2"},
-			[3] = {port=10703, node = "admin"},
+			--[2] = {port=10702, node = "node2"},
+			--[3] = {port=10703, node = "admin"},
 		},
 		--game服务
 		game = {
 			[1] = {node = "node1"},
-			[2] = {node = "node2"},
+			--[2] = {node = "node2"},
 		},
 
 		agentpool_common = {maxnum = 10, recyremove = 1, brokecachelen = 1,}, 
 		agentpool = {
 			[1] = {node = "node1"},
-			[2] = {node = "node2"},
+			--[2] = {node = "node2"},
 		},
 		--gateway服务
 		gateway_common = {maxclient = 1024, nodelay = true},
 		gateway = {
 			[1] = {port = 11798,  node = "node1"},
-			[2] = {port = 11799,  node = "node2"},
+			--[2] = {port = 11799,  node = "node2"},
 		},
 		--global服务
 		global = {
 			[1] = {node = "node1"},
-			[2] = {node = "node1"},
+			--[2] = {node = "node1"},
 		},
 		--center服务
 		center = {
 			[1] = {node = "node1"},
-			[2] = {node = "node1"},
+			--[2] = {node = "node1"},
 		},
 		--login服务
 		login = {
 			[1] = {node = "node1"},
-			[2] = {node = "node2"},
+			--[2] = {node = "node2"},
 		},
 		--dbproxy服务
 		dbproxy_common = {
@@ -65,8 +65,8 @@ return {
 		},
 		--host服务
 		host_common = {
-			web 	= 	{node = "node1", port = 12111,name="web"},
-			console = 	{node = "node1", port = 12010,name="console"}, --尚未实现
+			web = {node = "node1", port = 12111,name="web"},
+			console = {node = "node1", port = 12010,name="console"}, --尚未实现
 		}
     },
 	--玩家数据表配置

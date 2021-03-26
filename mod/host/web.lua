@@ -16,7 +16,7 @@ local node = skynet.getenv("nodename")
 
 local default_page = [[
 	<p>
-	hehe
+	test http
 	<p>
 	<a href="/?cmd=web.test">test</a>
 	<p>

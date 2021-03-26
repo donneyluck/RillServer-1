@@ -7,13 +7,13 @@ local servconf = runconf.service
 local nodename = skynet.getenv("nodename")
 
 local function start_host()
-    for k,v in pairs(servconf.host_common) do
-                if nodename == v.node and v.name=="web" then
-                        ERROR("start "..v.name.." in port: " .. v.port.."...")
-                        skynet.uniqueservice(v.name,"host", v.port)
-                end
-    end
-    ERROR("======start host server======= ")
+	for k,v in pairs(servconf.host_common) do
+				if nodename == v.node and v.name=="web" then
+						ERROR("start "..v.name.." in port: " .. v.port.."...")
+						skynet.uniqueservice(v.name, "host", v.port)
+				end
+	end
+	ERROR("======start host server======= ")
 end
 
 local function start_console()
@@ -131,9 +131,10 @@ skynet.start(function()
 
 	INFO("Server start version: " .. runconf.version)
 	--集群信息
-	cluster.reload(runconf.cluster)
-	cluster.open(nodename)
+	--cluster.reload(runconf.cluster)
+	--cluster.open(nodename)
 	--开启各个服务
+	start_host()
 	start_agentpool()
 	start_console()
 	start_setup()
@@ -142,8 +143,7 @@ skynet.start(function()
 	start_dbproxy()
 	start_center()
 	start_gateway()
-	--exit
-    skynet.exit()
+	skynet.exit()
 end)
 
 

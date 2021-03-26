@@ -1,4 +1,4 @@
---fici->facilitate 
+--faci->facilitate
 
 local skynet = require "skynet"
 local dispatch = require "faci.dispatch"
@@ -47,9 +47,9 @@ end
 
 skynet.start(function()
 	init()
-    if env.init then
-        env.init()
-    end
+	if env.init then
+		env.init()
+	end
 end)
 
 
