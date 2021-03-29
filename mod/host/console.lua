@@ -57,7 +57,7 @@ function event.start()
 	end
 	
 	local listenfd = socket.listen("127.0.0.1", cfg.port)
-	log.info("Listen console port %d", cfg.port)
+	INFO("Listen console port ", cfg.port)
 	
 	socket.start(listenfd , function(fd, addr)
 		log.info("connected %s%d", addr, fd)

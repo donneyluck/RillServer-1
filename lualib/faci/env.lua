@@ -10,23 +10,23 @@ M.fds = {}
 
 --模块
 M.module = {
-	--[[
-	login = {
-		--lua转发的消息
-		dispatch = {},
-		--转发的客户端消息
-		forward = {},
-		--事件
-		event = {},
-	}
-	--]]
+--[[
+  login = {
+  --lua转发的消息
+  dispatch = {},
+  --转发的客户端消息
+  forward = {},
+  --事件
+  event = {},
+  }
+--]]
 }
 
 --全局变量
 M.static = {
-	--[[
-		login = {}
-	--]]
+--[[
+login = {}
+--]]
 }
 
 M.dispatch = {} --为了不报错，先调试模块相关的内容
