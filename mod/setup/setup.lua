@@ -12,9 +12,9 @@ local event = module.event
 
 
 local function update()
-    skynet.timeout(100, 
-        function() 
-            D.update_all()  
+    skynet.timeout(100,
+        function()
+            D.update_all()
             update()
         end )
 end
