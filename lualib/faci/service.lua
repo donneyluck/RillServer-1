@@ -38,7 +38,7 @@ local function init()
 	module.init_modules()
 	module.fire_event("awake")
 	module.fire_event("start")
-	DEBUG("start ok "..name.."...")
+	ERROR("======> start ok "..name.." <=======")
 end
 
 function env.exit()

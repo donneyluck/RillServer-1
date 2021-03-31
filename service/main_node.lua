@@ -8,12 +8,10 @@ local nodename = skynet.getenv("nodename")
 
 local function start_host()
 	for k,v in pairs(servconf.host_common) do
-				if nodename == v.node and v.name=="web" then
-						ERROR("start "..v.name.." in port: " .. v.port.."...")
+				if nodename == v.node and v.name == "web" then
 						skynet.uniqueservice(v.name, "host", v.port)
 				end
 	end
-	ERROR("======start host server======= ")
 end
 
 local function start_console()
@@ -27,7 +25,6 @@ end
 
 local function start_setup()
 	local p = skynet.newservice("setup", "setup", 0)
-	ERROR("=========start setupd...======")
 end
 
 local function start_gateway()
@@ -45,8 +42,6 @@ local function start_gateway()
 				nodelay = c.nodelay,
 				name = name,
 			})
-
-			ERROR("=====start ", name, "port:", g.port, "...======")
 		else
 			local proxy = cluster.proxy(v.node, name)
 			skynet.name(name, proxy)
@@ -134,9 +129,9 @@ skynet.start(function()
 	--cluster.reload(runconf.cluster)
 	--cluster.open(nodename)
 	--开启各个服务
+	start_console()
 	start_host()
 	start_agentpool()
-	start_console()
 	start_setup()
 	start_global()
 	start_login()
@@ -145,5 +140,3 @@ skynet.start(function()
 	start_gateway()
 	skynet.exit()
 end)
-
-

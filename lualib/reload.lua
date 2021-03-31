@@ -264,7 +264,7 @@ local function travel_all()
                 f(value)
             end
         elseif type(t) == "table" then
-		
+
             f(debug.getmetatable(t))
             for k, v in pairs(t) do
                 f(k)

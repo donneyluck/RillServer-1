@@ -24,7 +24,7 @@ skynet.start(function()
 	--开启各个服务
 	start_console()
 	--exit
-    skynet.exit()
+	skynet.exit()
 end)
 
 

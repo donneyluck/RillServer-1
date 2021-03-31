@@ -73,7 +73,7 @@ local function lua_dispatch(session, addr, cmd, ...)
 	local ret = {xpcall(cb, traceback, ...)}
 	local isok = ret[1]
 	if not isok then
-		INFO("lua_dispatch cb call fail===> cmd: ", cmd1 .. "." .. cmd2, " ret:",inspect(ret) )
+		INFO("lua_dispatch cb call fail===> cmd: ", cmd1 .. "." .. cmd2, " ret:", inspect(ret) )
 		skynet.ret()
 		return false
 	end
@@ -96,18 +96,18 @@ function romote_dispatch(cmd1, cmd2, fd, msg, source)
 	local uid = env.fds[fd]
 	local player = env.players[uid] 
 	if not player then
-        log.error("romote_dispatch player(fd:%s) is not exist, cmd = %s.%s", fd, cmd1, cmd2)
-        return false
-    end
-    local adress = player.romote[cmd1] --eg:global1
-    if not adress then
-        log.error("romote_dispatch adress(%s) is not exist, cmd = %s", cmd1, cmd2)
-        return false
-    end
+		log.error("romote_dispatch player(fd:%s) is not exist, cmd = %s.%s", fd, cmd1, cmd2)
+		return false
+	end
+	local adress = player.romote[cmd1] --eg:global1
+	if not adress then
+		log.error("romote_dispatch adress(%s) is not exist, cmd = %s", cmd1, cmd2)
+		return false
+	end
 	
 	local uid = get_v(fd).uid
 	log.info("client_forward %s.%s", cmd1, cmd2)
-    local isok, ret = skynet.call(adress, "lua", "client_forward", cmd1, cmd2, uid, msg, source)
+	local isok, ret = skynet.call(adress, "lua", "client_forward", cmd1, cmd2, uid, msg, source)
 	return isok, ret 
 end
 
@@ -131,12 +131,12 @@ function local_dispatch(cmd1, cmd2, fd, msg, source)
 		return false
 	end
 	--开始分发
-    local isok, ret = xpcall(cb, traceback, get_v(fd), msg, source)
-    if not isok then
-        log.error("local_dispatch handle msg error, cmd = %s, msg = %s, err=%s", cmd1, tool.dump(msg), ret)
+	local isok, ret = xpcall(cb, traceback, get_v(fd), msg, source)
+	if not isok then
+		log.error("local_dispatch handle msg error, cmd = %s, msg = %s, err=%s", cmd1, tool.dump(msg), ret)
 		return true --报错的情况也表示分发到位
-    end
-    return true, ret 
+	end
+	return true, ret
 end
 
 function client_dispatch(session, source, str)

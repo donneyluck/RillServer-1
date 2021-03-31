@@ -43,6 +43,7 @@ end
 local function handler(addr, fd)
 	socket.start(fd)
 	-- limit request body size to 8192 (you can pass nil to unlimit)
+	-- 一般的业务不需要处理大量上行数据，为了防止攻击，做了一个 8K 限制。这个限制可以去掉。
 	local code, url, method, header, body = httpd.read_request(sockethelper.readfunc(fd), 8192)
 	
 	if not code then
@@ -86,7 +87,7 @@ function event.start()
 	INFO("Listen web port:", cfg.port)
 	
 	socket.start(listenfd , function(fd, addr)
-		log.info("connected %s%d", addr, fd)
+		INFO("connected %s%d", addr, fd)
 		skynet.fork(handler, addr, fd)
 	end)
 end

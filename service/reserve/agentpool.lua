@@ -50,7 +50,7 @@ function CMD.recycle(agent)
 end
 
 skynet.start(function()
-	skynet.dispatch("lua", function (_, address, cmd, ...)
+	skynet.dispatch("lua", function (_, _, cmd, ...)
 		local f = assert(CMD[cmd])
 		skynet.ret(skynet.pack(f(...)))
 	end)
