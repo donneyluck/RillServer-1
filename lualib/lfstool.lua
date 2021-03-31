@@ -5,12 +5,12 @@ local M = {}
 
 local sep = string.match (package.config, "[^\n]+")
 function M.attrdir(path, cb)
-	local ret = {}
+    local ret = {}
     for file in lfs.dir(path) do
         if string.sub(file, 1, 1) ~= "." then
             local f = path .. sep .. file
             table.insert(ret, f)
-			if type(cb) == "function" then cb(f) end
+            if type(cb) == "function" then cb(f) end
             local attr = lfs.attributes(f)
             assert(type(attr) == "table")
             if attr.mode == "directory" then
@@ -22,7 +22,7 @@ function M.attrdir(path, cb)
             end
         end
     end
-	return ret
+    return ret
 end
 
 return M
