@@ -40,7 +40,7 @@ local function require_modules()
 	end)
 end
 
-local module = {}
+-- local module = {}
 function M.get_module(name)
 	--模块处理函数
 	env.module[name] = env.module[name] or {

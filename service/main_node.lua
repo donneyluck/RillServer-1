@@ -43,8 +43,8 @@ local function start_gateway()
 				name = name,
 			})
 		else
-			local proxy = cluster.proxy(v.node, name)
-			skynet.name(name, proxy)
+			-- local proxy = cluster.proxy(v.node, name)
+			-- skynet.name(name, proxy)
 		end
 	end
 end
@@ -67,8 +67,8 @@ local function start_agentpool()
 				brokecachelen = c.brokecachelen,
 			})
 		else
-			local proxy = cluster.proxy(v.node, name)
-			skynet.name(name, proxy)
+			-- local proxy = cluster.proxy(v.node, name)
+			-- skynet.name(name, proxy)
 		end
 	end
 end
@@ -79,8 +79,8 @@ local function start_login()
 		if nodename == v.node then
 			local p = skynet.newservice("login", "login", i)
 		else
-			local proxy = cluster.proxy(v.node, name)
-			skynet.name(name, proxy)
+			-- local proxy = cluster.proxy(v.node, name)
+			-- skynet.name(name, proxy)
 		end
 	end
 end
@@ -91,8 +91,8 @@ local function start_dbproxy()
 		if nodename == v.node then
 			local p = skynet.newservice("dbproxy", "dbproxy", i)
 		else
-			local proxy = cluster.proxy(v.node, name)
-			skynet.name(name, proxy)
+			-- local proxy = cluster.proxy(v.node, name)
+			-- skynet.name(name, proxy)
 		end
 	end
 end
@@ -103,8 +103,8 @@ local function start_center()
 		if nodename == v.node then
 			local p = skynet.newservice("center", "center", i)
 		else
-			local proxy = cluster.proxy(v.node, name)
-			skynet.name(name, proxy)
+			-- local proxy = cluster.proxy(v.node, name)
+			-- skynet.name(name, proxy)
 		end
 	end
 end
@@ -115,8 +115,8 @@ local function start_global()
 		if nodename == v.node then
 			local p = skynet.newservice("global", "global", i)
 		else
-			local proxy = cluster.proxy(v.node, name)
-			skynet.name(name, proxy)
+			-- local proxy = cluster.proxy(v.node, name)
+			-- skynet.name(name, proxy)
 		end
 	end
 end
@@ -126,8 +126,8 @@ skynet.start(function()
 
 	INFO("Server start version: " .. runconf.version)
 	--集群信息
-	--cluster.reload(runconf.cluster)
-	--cluster.open(nodename)
+	cluster.reload(runconf.cluster)
+	cluster.open(nodename)
 	--开启各个服务
 	start_console()
 	start_host()

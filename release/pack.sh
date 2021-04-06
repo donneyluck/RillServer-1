@@ -1,6 +1,6 @@
 #!/bin/bash
 
-CUR_DIR=$(dirname $(readlink -f $0))
+CUR_DIR=$(dirname $(greadlink -f $0))
 SRC_DIR=$CUR_DIR/..
 DEST_DIR=$CUR_DIR/server
 BUILD_DIR=$CUR_DIR/build
@@ -12,27 +12,27 @@ fi
 mkdir -p $DEST_DIR
 
 cd $SRC_DIR
-make rpc
+#make rpc
 
 # Copy files
 FILES=(\
-  client      \
-  common      \
+#  client      \
+#  common      \
   luaclib     \
   lualib      \
   lualib-src  \
-  Makefile    \
+#  Makefile    \
   proto       \
   service     \
-  web         \
-  sh          \
+#  web         \
+#  sh          \
 )
 for file in ${FILES[*]} ; do
   cp -r $SRC_DIR/$file $DEST_DIR
 done
 
-mkdir -p $DEST_DIR/data
-cp $SRC_DIR/data/*.json $DEST_DIR/data
+# mkdir -p $DEST_DIR/data
+# cp $SRC_DIR/data/*.json $DEST_DIR/data
 
 SKYNET_DIR=$SRC_DIR/skynet
 SKYNET_DEST_DIR=$DEST_DIR/skynet

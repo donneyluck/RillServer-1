@@ -14,21 +14,21 @@ local forward = module.forward
 local event = module.event
 
 local login_auth = require "login.login_auth"
-local login_result_code=require "loginresultcode"
+local login_result_code = require "loginresultcode"
 
 
 function forward.login(fd, msg, source)
 	local sdkid = msg.sdkid --ƽ̨ID
-    local account = msg.account
+	local account = msg.account
 	local password = msg.password
 
 	local msgresult={}
-	msgresult.account=msg.account
-	msgresult._cmd=msg._cmd
-	msgresult._check=msg._check
+	msgresult.account = msg.account
+	msgresult._cmd = msg._cmd
+	msgresult._check = msg._check
 	--key
 	key_seq = key_seq + 1
-	local key = env.id*10000 + key_seq
+	local key = env.id * 10000 + key_seq
 
 	--login auth 
 	local isok, uid = login_auth(sdkid, msg)

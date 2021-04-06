@@ -12,6 +12,7 @@ local event = module.event
 local function call_clusters(ignore, ...) --ignore -> ignore self
 	for node, _ in pairs(runconf.cluster) do
 		if not ignore or node ~= skynet.getenv("nodename") then
+            ERROR("calll......")
 			pcall(cluster.call, node, "host", ...)
 		end
 	end
@@ -23,7 +24,7 @@ function dispatch.host_mod(addr, fd ,q)
 	local service_name = q.name
 	local mod = q.mod or "ALL"
 	log.debug("start reload %s ...", mod)
-	
+
 	local list = {}
 	local services = skynet.call(".launcher", "lua", "LIST")
     for k, v in pairs(services) do
@@ -50,6 +51,7 @@ function dispatch.host_setup(addr, fd ,q)
 end
 
 function dispatch.setup(addr, fd ,q)
+    ERROR("dispatch.setup")
 	call_clusters(false, "reload.host_setup", addr, fd ,q)
 	return "update"
 end
