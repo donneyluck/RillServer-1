@@ -11,8 +11,7 @@ local function start_host()
 				if nodename == v.node and v.name == "web" then
 						skynet.uniqueservice(v.name, "host", v.port)
 				end
-	end
-end
+	end end
 
 local function start_console()
 	for i,v in pairs(servconf.debug_console) do
