@@ -1,17 +1,19 @@
 
 local json = require "cjson"
-local pb = require("luapbintf")
-local io = require "io" 
+-- local pb = require("luapbintf")
+local io = require "io"
 local crc32 = require "crc32" 
 local tool = require "tool"
 local lfstool = require "lfstool"
 local lfs = require "lfs"
 
---Э?????
+local pb = require "pb"
+
+--协议号映射表
 local name2code = {}
 local code2name = {}
 
---??protoτ?ì?????
+--分析proto文件，计算映射表
 local function analysis_file(path)
 	local file = io.open(path, "r") 
 	local package = ""
@@ -25,7 +27,7 @@ local function analysis_file(path)
 		if c > 0 then
 			local name = package.."."..s
 			local code = crc32.hash(name)
-			--print(string.format("analysis proto file:%s->%d(%x)", name, code, code))
+			print(string.format("analysis proto file:%s->%d(%x)", name, code, code))
 			name2code[name] = code
 			code2name[code] = name
 		end
@@ -33,21 +35,44 @@ local function analysis_file(path)
 	file:close()  
 end
 
---??protoτ?ì?analysis_file
-
+--导入proto文件，并analysis_file
 local path = lfs.currentdir()  --eg /root/zServer/test
 pbpath = string.sub(path, 1, -5).."proto"  --eg /root/zServer/proto
 
-pb.add_proto_path("/")
+-- pb.add_proto_path("/")
 
 lfstool.attrdir(pbpath, function(file)
-	local file = string.match(file, "(.+%.proto)")
+	local file = string.match(file, "(.+%.pb)")
+	print(file)
 	if file then
-		--print("import proto file:"..file)
-		pb.import_proto_file(string.sub(file,2))
-		analysis_file(file)
+		--kprint("load proto file:"..file..".pb")
+		-- pb.import_proto_file(string.sub(file,2))
+		-- assert(pb.load(file))
+		--analysis_file(file)
+		assert(pb.loadfile(file))
 	end
 end)
+
+local login = {
+	account = "tanghailong",
+	password = "123456",
+	skdid = 1
+}
+
+local echo = {
+	str = "232313"
+}
+
+
+for name, basename, type in pb.types() do
+  print(name, basename, type)
+end
+-- 序列化成二进制数据
+local data = assert(pb.encode("login.login", login))
+
+-- 从二进制数据解析出实际消息
+local msg = assert(pb.decode("login.login", data))
+
 
 --?????stringì????
 local function bin2hex(s)

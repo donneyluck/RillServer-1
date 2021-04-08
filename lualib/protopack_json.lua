@@ -6,7 +6,7 @@ local M = {}
 
 function M.pack(cmd, check, msg)
     msg._cmd = cmd
-	msg._check = check
+    msg._check = check
     local str = json.encode(msg)
     return str
 end

@@ -1,5 +1,3 @@
-
-
 local skynet = require "skynet"
 local queue = require "skynet.queue"
 local cs = queue()
