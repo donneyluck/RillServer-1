@@ -1,4 +1,3 @@
-
 local json = require "cjson"
 -- local pb = require("luapbintf")
 local io = require "io"
@@ -15,9 +14,9 @@ local code2name = {}
 
 --分析proto文件，计算映射表
 local function analysis_file(path)
-	local file = io.open(path, "r") 
+	local file = io.open(path, "r")
 	local package = ""
-	
+
 	for line in file:lines() do
 		local s, c = string.gsub(line, "^%s*package%s*([^%s]+)%s*[;%s].*$", "%1")
 		if c > 0 then
@@ -74,10 +73,10 @@ local data = assert(pb.encode("login.login", login))
 local msg = assert(pb.decode("login.login", data))
 
 
---?????stringì????
+--打印二进制string，用于调试
 local function bin2hex(s)
-    s=string.gsub(s,"(.)",function (x) return string.format("%02X ",string.byte(x)) end)
-    return s
+	s=string.gsub(s,"(.)",function (x) return string.format("%02X ",string.byte(x)) end)
+	return s
 end
 
 local M = {}
@@ -86,12 +85,12 @@ local M = {}
 --checkcode:1234
 --msg:{account="1",password="1234"}
 function M.pack(cmd, check, msg)
-	--????
+	--格式说明
 	--> >:big endian
-	-->i2:??}λ???
+	-->i2:前面两位为长度
 	-->i4:int32 checkcode
-    -->I4:uint32 cmd_code 
-	
+	-->I4:uint32 cmd_code
+
 	--code
 	local code = name2code[cmd]
 	if not code then
@@ -113,7 +112,7 @@ function M.pack(cmd, check, msg)
 	print("send pbstr:"..bin2hex(pbstr))
 	print("send:"..bin2hex(str))
 	print(string.format("send:cmd(%s) check(%d) msg->%s", cmd, check, tool.dump(msg)))
-    return str
+	return str
 end
 
 function M.unpack(str)
@@ -125,7 +124,7 @@ function M.unpack(str)
 	--print("recv:"..bin2hex(str))
 	--print("recv pbstr:"..bin2hex(pbstr))
 	print(string.format("recv:cmd(%s) check(%d) msg->%s", cmd, check, tool.dump(msg)))
-    return cmd, check, msg
+	return cmd, check, msg
 end
 
 

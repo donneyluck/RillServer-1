@@ -49,8 +49,8 @@ end
 
 --打印二进制string，用于调试
 local function bin2hex(s)
-    s=string.gsub(s, "(.)", function (x) return string.format("%02X ", string.byte(x)) end)
-    return s
+	s=string.gsub(s, "(.)", function (x) return string.format("%02X ", string.byte(x)) end)
+	return s
 end
 
 local M = {}
@@ -63,7 +63,7 @@ function M.pack(cmd, check, msg)
 	--> >:big endian
 	-->i2:前面两位为长度
 	-->i4:int32 checkcode
-    -->I4:uint32 cmd_code 
+	-->I4:uint32 cmd_code
 	if not pb then
 		pb=require("luapbintf")
 		init()
@@ -87,7 +87,7 @@ function M.pack(cmd, check, msg)
 	--调试
 	--log.info("send:"..bin2hex(str))
 	log.info(string.format("send:cmd(%s) check(%d) msg->%s", cmd, check, tool.dump(msg)))
-    return str
+	return str
 end
 
 function M.unpack(str)
@@ -108,7 +108,7 @@ function M.unpack(str)
 	local msg = pb.decode(cmd, pbstr)
 	
 	log.info("recv:cmd(%s) check(%d) msg->%s", cmd, check, tool.dump(msg))
-    return cmd, check, msg
+	return cmd, check, msg
 end
 
 return M

@@ -19,7 +19,7 @@ local function watch(mod, acm)
 	if not m then
 		return true, nil
 	end
-	
+
 	if type(m.watch) == "function" then
 		return true, m.watch(acm)
 	end
@@ -47,21 +47,21 @@ local function lua_dispatch(session, addr, cmd, ...)
 		skynet.ret()
 		return false
 	end
-	
+
 	local dispatch = module.dispatch
 	if type(dispatch) ~= "table" then
 		ERROR("lua_dispatch dispatch is not table cmd:", cmd1, "subcmd:", cmd2)
 		skynet.ret()
 		return false
 	end
-	
+
 	local cb = dispatch[cmd2]
 	if type(cb) ~= "function" then
 		ERROR("lua_dispatch cb is not function cmd:", cmd1, "subcmd:", cmd2)
 		skynet.ret()
 		return false
 	end
-	
+
 	--分发
 	local function skyret(ok, ...)
 		if not ok then
@@ -94,7 +94,7 @@ end
 --远程分发
 function romote_dispatch(cmd1, cmd2, fd, msg, source)
 	local uid = env.fds[fd]
-	local player = env.players[uid] 
+	local player = env.players[uid]
 	if not player then
 		log.error("romote_dispatch player(fd:%s) is not exist, cmd = %s.%s", fd, cmd1, cmd2)
 		return false
@@ -104,11 +104,11 @@ function romote_dispatch(cmd1, cmd2, fd, msg, source)
 		log.error("romote_dispatch adress(%s) is not exist, cmd = %s", cmd1, cmd2)
 		return false
 	end
-	
+
 	local uid = get_v(fd).uid
 	log.info("client_forward %s.%s", cmd1, cmd2)
 	local isok, ret = skynet.call(adress, "lua", "client_forward", cmd1, cmd2, uid, msg, source)
-	return isok, ret 
+	return isok, ret
 end
 
 --本地分发
@@ -124,7 +124,7 @@ function local_dispatch(cmd1, cmd2, fd, msg, source)
 		log.info("local_dispatch forward is not table, cmd = %s.%s, msg = %s", cmd1, cmd2, tool.dump(msg))
 		return false
 	end
-	
+
 	local cb = forward[cmd2]
 	if type(cb) ~= "function" then
 		log.info("local_dispatch cb is not function, cmd = %s.%s, str = %s", cmd1, cmd2, tool.dump(msg))
@@ -159,7 +159,7 @@ function client_dispatch(session, source, str)
 	if not isok then
 		isok, ret = romote_dispatch(cmdlist[1], cmdlist[2], fd, msg, source)
 	end
-	
+
 	if ret then
 		local rcmd, rcheck = ret._cmd.."result", ret._check
 		ret._cmd = nil
@@ -176,5 +176,5 @@ skynet.register_protocol{
 	name = "client",
 	id = skynet.PTYPE_CLIENT,
 	unpack = skynet.tostring,
-	dispatch = client_dispatch, 
+	dispatch = client_dispatch,
 }
