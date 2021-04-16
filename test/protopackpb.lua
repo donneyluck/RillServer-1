@@ -26,12 +26,12 @@ local function analysis_file(path)
 		if c > 0 then
 			local name = package.."."..s
 			local code = crc32.hash(name)
-			print(string.format("analysis proto file:%s->%d(%x)", name, code, code))
+			print(string.format("analysis proto: %s->%d(%x)", name, code, code))
 			name2code[name] = code
 			code2name[code] = name
 		end
 	end
-	file:close()  
+	file:close()
 end
 
 --导入proto文件，并analysis_file
@@ -41,14 +41,18 @@ pbpath = string.sub(path, 1, -5).."proto"  --eg /root/zServer/proto
 -- pb.add_proto_path("/")
 
 lfstool.attrdir(pbpath, function(file)
-	local file = string.match(file, "(.+%.pb)")
-	print(file)
-	if file then
-		--kprint("load proto file:"..file..".pb")
+	local proto_file = string.match(file, "(.+%.proto)")
+	if proto_file then
+		print("load proto file: "..proto_file)
 		-- pb.import_proto_file(string.sub(file,2))
 		-- assert(pb.load(file))
-		--analysis_file(file)
-		assert(pb.loadfile(file))
+		analysis_file(proto_file)
+		-- assert(pb.loadfile(file))
+	end
+	local pb_file = string.match(file, "(.+%.pb)")
+	if pb_file then
+		print("load pb file: "..pb_file)
+		assert(pb.loadfile(pb_file))
 	end
 end)
 
@@ -67,10 +71,10 @@ for name, basename, type in pb.types() do
   print(name, basename, type)
 end
 -- 序列化成二进制数据
-local data = assert(pb.encode("login.login", login))
+-- local data = assert(pb.encode("login.login", login))
 
 -- 从二进制数据解析出实际消息
-local msg = assert(pb.decode("login.login", data))
+-- local msg = assert(pb.decode("login.login", data))
 
 
 --打印二进制string，用于调试
@@ -105,9 +109,11 @@ function M.pack(cmd, check, msg)
 	local pblen = string.len(pbstr)
 	--len
 	local len = 4+4+pblen
-	--???????
+	--组成发送字符串
 	local f = string.format("> i2 i4 I4 c%d", pblen)
 	local str = string.pack(f, len, check, code, pbstr)
+	print("f:", f)
+	print("str:", str)
 	--??
 	print("send pbstr:"..bin2hex(pbstr))
 	print("send:"..bin2hex(str))
@@ -121,8 +127,8 @@ function M.unpack(str)
 	local check, code, pbstr = string.unpack(f, str)
 	local cmd = code2name[code]
 	local msg = pb.decode(cmd, pbstr)
-	--print("recv:"..bin2hex(str))
-	--print("recv pbstr:"..bin2hex(pbstr))
+	print("recv:"..bin2hex(str))
+	print("recv pbstr:"..bin2hex(pbstr))
 	print(string.format("recv:cmd(%s) check(%d) msg->%s", cmd, check, tool.dump(msg)))
 	return cmd, check, msg
 end

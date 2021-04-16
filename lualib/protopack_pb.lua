@@ -14,7 +14,7 @@ local code2name = {}
 local function analysis_file(path)
 	local file = io.open(path, "r") 
 	local package = ""
-	
+
 	for line in file:lines() do
 		local s, c = string.gsub(line, "^%s*package%s*([%w%.]+).*$", "%1")
 		if c > 0 then
@@ -24,24 +24,29 @@ local function analysis_file(path)
 		if c > 0 then
 			local name = package.."."..s
 			local code = crc32.hash(name)
-			--print(string.format("analysis proto file:%s->%d(%x)", name, code, code))
+			print(string.format("analysis proto file:%s->%d(%x)", name, code, code))
 			name2code[name] = code
 			code2name[code] = name
 		end
 	end
-	file:close()  
+	file:close()
 end
 
 local function init()
 	--导入proto文件，并analysis_file
 	local path = skynet.getenv("app_root").."proto"
-	pb.add_proto_path(path)
+	-- pb.add_proto_path(path)
 	lfstool.attrdir(path, function(file)
-		local file = string.match(file, path.."/(.+%.proto)") --获取文件名
-		if file then
-			log.info("import proto file:"..file)
-			pb.import_proto_file(file) --相对路径
-			analysis_file(path.."/"..file) --绝对路径
+		local proto_file = string.match(file, path.."(.+%.proto)") --获取文件名
+		if proto_file then
+			log.info("load proto file:"..proto_file)
+			-- pb.import_proto_proto_file(proto_file) --相对路径
+			analysis_file(path.."/"..proto_file) --绝对路径
+		end
+		local pb_file = string.match(file, "(.+%.pb)")
+		if pb_file then
+			log.info("load pb file: "..pb_file)
+			assert(pb.loadfile(pb_file))
 		end
 	end)
 end
@@ -65,7 +70,8 @@ function M.pack(cmd, check, msg)
 	-->i4:int32 checkcode
 	-->I4:uint32 cmd_code
 	if not pb then
-		pb=require("luapbintf")
+		-- pb=require("luapbintf")
+		pb = require("pb")
 		init()
 	end
 	--code
@@ -92,7 +98,8 @@ end
 
 function M.unpack(str)
 	if not pb then
-		pb=require("luapbintf")
+		-- pb=require("luapbintf")
+		pb = require("pb")
 		init()
 	end
 	log.info("recv:"..bin2hex(str))
