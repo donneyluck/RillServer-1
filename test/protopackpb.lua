@@ -1,14 +1,14 @@
 local json = require "cjson"
 -- local pb = require("luapbintf")
 local io = require "io"
-local crc32 = require "crc32" 
+local crc32 = require "crc32"
 local tool = require "tool"
 local lfstool = require "lfstool"
 local lfs = require "lfs"
 
 local pb = require "pb"
 
---协议号映射表
+-- 协议号映射表
 local name2code = {}
 local code2name = {}
 
@@ -56,15 +56,15 @@ lfstool.attrdir(pbpath, function(file)
 	end
 end)
 
-local login = {
-	account = "tanghailong",
-	password = "123456",
-	skdid = 1
-}
+-- local login = {
+-- 	account = "tanghailong",
+-- 	password = "123456",
+-- 	skdid = 1
+-- }
 
-local echo = {
-	str = "232313"
-}
+-- local echo = {
+-- 	str = "232313"
+-- }
 
 
 for name, basename, type in pb.types() do

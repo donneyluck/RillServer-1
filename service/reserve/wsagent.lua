@@ -51,11 +51,11 @@ function service_dispatch(service_name, cmd, msg)
     end
     
     local player = env.get_player()
-    
+
 	local uid = player.uid
 	local id = service.id
 	local adress = service.adress
-    return skynet.call(adress, "lua", "client_forward", cmd, id, uid, msg) 
+    return skynet.call(adress, "lua", "client_forward", cmd, id, uid, msg)
 end
 
 function dispatch(_, _, str)

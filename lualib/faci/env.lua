@@ -31,5 +31,6 @@ login = {}
 
 M.dispatch = {} --为了不报错，先调试模块相关的内容
 M.forward = {}
+M.service = {}
 return M
 

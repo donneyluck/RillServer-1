@@ -58,7 +58,7 @@ function M.broadcast2client(msg)
 	M.broadcast("broadcast.broadcast2client", msg)
 end
 
--- skynet.init(init)
+skynet.init(init)
 
 
 

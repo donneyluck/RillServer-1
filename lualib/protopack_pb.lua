@@ -37,11 +37,11 @@ local function init()
 	local path = skynet.getenv("app_root").."proto"
 	-- pb.add_proto_path(path)
 	lfstool.attrdir(path, function(file)
-		local proto_file = string.match(file, path.."(.+%.proto)") --获取文件名
+		local proto_file = string.match(file, "(.+%.proto)") --获取文件名
 		if proto_file then
 			log.info("load proto file:"..proto_file)
 			-- pb.import_proto_proto_file(proto_file) --相对路径
-			analysis_file(path.."/"..proto_file) --绝对路径
+			analysis_file(proto_file) --绝对路径
 		end
 		local pb_file = string.match(file, "(.+%.pb)")
 		if pb_file then
