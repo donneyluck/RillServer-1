@@ -9,9 +9,9 @@ local gateserver = {}
 
 local max_packsize = 10*1024
 local max_headersize = 1024
-local socket	-- listen socket
-local queue		-- message queue
-local maxclient	-- max client
+local socket    -- listen socket
+local queue         -- message queue
+local maxclient     -- max client
 local client_number = 0
 local CMD = setmetatable({}, { __gc = function() netpack.clear(queue) end })
 local nodelay = false
@@ -24,19 +24,19 @@ local function parse_httpheader(http_str)
     local start = 0
     local str
     i = string.find(http_str, "\r\n", i+1)
-	while true  and i ~= nil do
-		start = i + 2
-		i = string.find(http_str, "\r\n", start)
-		if i ~= nil then
+    while true  and i ~= nil do
+        start = i + 2
+        i = string.find(http_str, "\r\n", start)
+        if i ~= nil then
             str = string.sub(http_str, start, i-1)
             local key, value = string.match(str, "([%a-]+)%s*: (.*)")
-	        if key ~= nil then
+            if key ~= nil then
                 header[key:lower()] = value
-			end
-		end
+            end
+        end
     end
 
-	return header
+    return header
 end
 
 ------------------websocket 握手时使用的相关接口  begin----------------------
@@ -96,200 +96,200 @@ local function checkwebsocket_valid(header, check_origin, check_origin_ok)
 end
 
 local function writefunc(fd)
-	return function(content)
-		local ok = socketdriver.send(fd, content)
-		if not ok then
-			error(socket_error)
-		end
-	end
+    return function(content)
+        local ok = socketdriver.send(fd, content)
+        if not ok then
+            error(socket_error)
+        end
+    end
 end
 ------------------websocket 握手时使用的相关接口  end----------------------
 
 
 function gateserver.openclient(fd)
-	if connection[fd] ~= nil  and  connection[fd].isconnect then
-		socketdriver.start(fd)
-		return true
-	end
-	return false
+    if connection[fd] ~= nil  and  connection[fd].isconnect then
+        socketdriver.start(fd)
+        return true
+    end
+    return false
 end
 
 function gateserver.closeclient(fd)
-	local c = connection[fd]
-	if c then
-		client_number = client_number - 1
-		connection[fd] = nil
-		socketdriver.close(fd)
-	end
+    local c = connection[fd]
+    if c then
+        client_number = client_number - 1
+        connection[fd] = nil
+        socketdriver.close(fd)
+    end
 end
 
 function gateserver.checkwebsocket(fd, header)
 
     local code, result = checkwebsocket_valid(header, nil, nil)
     if code then
-		httpd.write_response(writefunc(fd), code, result)
+        httpd.write_response(writefunc(fd), code, result)
         gateserver.closeclient(fd)
-		return false
+        return false
     else
         socketdriver.send(fd, result)
-		return true
+        return true
     end
-	return true
+    return true
 end
 
 function gateserver.start(handler)
-	assert(handler.message)
-	assert(handler.connect)
+    assert(handler.message)
+    assert(handler.connect)
 
-	function CMD.open( source, conf )
-		assert(not socket)
-		local address = conf.address or "0.0.0.0"
-		local port = assert(conf.port)
-		maxclient = conf.maxclient or 1024
-		nodelay = conf.nodelay
-		skynet.error(string.format("Listen on %s:%d", address, port))
-		socket = socketdriver.listen(address, port)
-		socketdriver.start(socket)
-		if handler.open then
-			return handler.open(source, conf)
-		end
-	end
+    function CMD.open( source, conf )
+        assert(not socket)
+        local address = conf.address or "0.0.0.0"
+        local port = assert(conf.port)
+        maxclient = conf.maxclient or 1024
+        nodelay = conf.nodelay
+        skynet.error(string.format("Listen on %s:%d", address, port))
+        socket = socketdriver.listen(address, port)
+        socketdriver.start(socket)
+        if handler.open then
+            return handler.open(source, conf)
+        end
+    end
 
-	function CMD.close()
-		assert(socket)
-		socketdriver.close(socket)
-	end
+    function CMD.close()
+        assert(socket)
+        socketdriver.close(socket)
+    end
 
-	local MSG = {}
+    local MSG = {}
 
-	local function dispatch_msg(fd, msg, sz)
-		if connection[fd] ~= nil and connection[fd].isconnect then
-			if connection[fd].iswebsocket_handeshake == 1 then
-				--websocket 握手回包处理
-				if sz >= max_headersize then
-					gateserver.closeclient(fd)
-					return
-				end
+    local function dispatch_msg(fd, msg, sz)
+        if connection[fd] ~= nil and connection[fd].isconnect then
+            if connection[fd].iswebsocket_handeshake == 1 then
+                --websocket 握手回包处理
+                if sz >= max_headersize then
+                    gateserver.closeclient(fd)
+                    return
+                end
 
-				local str_msg = netpack.tostring(msg, sz)
-				local header = parse_httpheader(str_msg)
-				if (gateserver.checkwebsocket(fd, header)) then
-					connection[fd].iswebsocket_handeshake = 0
-				end
-				return								
-			end
+                local str_msg = netpack.tostring(msg, sz)
+                local header = parse_httpheader(str_msg)
+                if (gateserver.checkwebsocket(fd, header)) then
+                    connection[fd].iswebsocket_handeshake = 0
+                end
+                return
+            end
 
-			if sz >= max_packsize then				
-				gateserver.closeclient(fd)
-				return
-			end
-			
-			handler.message(fd, msg, sz)			
-		else
-			skynet.error(string.format("Drop message from fd (%d) : %s", fd, netpack.tostring(msg,sz)))
-		end
-	end
+            if sz >= max_packsize then
+                gateserver.closeclient(fd)
+                return
+            end
 
-	MSG.data = dispatch_msg
+            handler.message(fd, msg, sz)
+        else
+            skynet.error(string.format("Drop message from fd (%d) : %s", fd, netpack.tostring(msg,sz)))
+        end
+    end
 
-	local function dispatch_queue()
-		local fd, msg, sz = netpack.pop(queue)
-		if fd then
-			-- may dispatch even the handler.message blocked
-			-- If the handler.message never block, the queue should be empty, so only fork once and then exit.
-			skynet.fork(dispatch_queue)
-			dispatch_msg(fd, msg, sz)
+    MSG.data = dispatch_msg
 
-			for fd, msg, sz in netpack.pop, queue do
-				dispatch_msg(fd, msg, sz)
-			end
-		end
-	end
+    local function dispatch_queue()
+        local fd, msg, sz = netpack.pop(queue)
+        if fd then
+            -- may dispatch even the handler.message blocked
+            -- If the handler.message never block, the queue should be empty, so only fork once and then exit.
+            skynet.fork(dispatch_queue)
+            dispatch_msg(fd, msg, sz)
 
-	MSG.more = dispatch_queue
+            for fd, msg, sz in netpack.pop, queue do
+                dispatch_msg(fd, msg, sz)
+            end
+        end
+    end
 
-	function MSG.open(fd, msg)
-		if client_number >= maxclient then
-			socketdriver.close(fd)
-			return
-		end
-		if nodelay then
-			socketdriver.nodelay(fd)
-		end
-		connection[fd] = {}
-		connection[fd].isconnect = true
-		connection[fd].iswebsocket_handeshake = 1
-		client_number = client_number + 1
-		handler.connect(fd, msg)
-	end
+    MSG.more = dispatch_queue
 
-	local function close_fd(fd)
-		local c = connection[fd]
-		if c ~= nil then
-			connection[fd] = nil
-			client_number = client_number - 1
-		end
-	end
+    function MSG.open(fd, msg)
+        if client_number >= maxclient then
+            socketdriver.close(fd)
+            return
+        end
+        if nodelay then
+            socketdriver.nodelay(fd)
+        end
+        connection[fd] = {}
+        connection[fd].isconnect = true
+        connection[fd].iswebsocket_handeshake = 1
+        client_number = client_number + 1
+        handler.connect(fd, msg)
+    end
 
-	function MSG.close(fd)
-		if fd ~= socket then
-			if handler.disconnect then
-				handler.disconnect(fd)
-			end
-			close_fd(fd)
-		else
-			socket = nil
-		end
-	end
+    local function close_fd(fd)
+        local c = connection[fd]
+        if c ~= nil then
+            connection[fd] = nil
+            client_number = client_number - 1
+        end
+    end
 
-	function MSG.error(fd, msg)
-		if fd == socket then
-			socketdriver.close(fd)
-			skynet.error(msg)
-		else
-			if handler.error then
-				handler.error(fd, msg)
-			end
-			close_fd(fd)
-		end
-	end
+    function MSG.close(fd)
+        if fd ~= socket then
+            if handler.disconnect then
+                handler.disconnect(fd)
+            end
+            close_fd(fd)
+        else
+            socket = nil
+        end
+    end
 
-	function MSG.warning(fd, size)
-		if handler.warning then
-			handler.warning(fd, size)
-		end
-	end
+    function MSG.error(fd, msg)
+        if fd == socket then
+            socketdriver.close(fd)
+            skynet.error(msg)
+        else
+            if handler.error then
+                handler.error(fd, msg)
+            end
+            close_fd(fd)
+        end
+    end
 
-	skynet.register_protocol {
-		name = "socket",
-		id = skynet.PTYPE_SOCKET,	-- PTYPE_SOCKET = 6
-		unpack = function ( msg, sz )
+    function MSG.warning(fd, size)
+        if handler.warning then
+            handler.warning(fd, size)
+        end
+    end
+
+    skynet.register_protocol {
+        name = "socket",
+        id = skynet.PTYPE_SOCKET,   -- PTYPE_SOCKET = 6
+        unpack = function ( msg, sz )
             local _, fd = socketdriver.unpack(msg, sz)
-			if (connection[fd] == nil ) then
-				return netpack.filter( queue, msg, sz, 1)
-			elseif connection[fd].isconnect then
-				return netpack.filter( queue, msg, sz, connection[fd].iswebsocket_handeshake)
-			end
-			return netpack.filter( queue, msg, sz, 1)
-		end,
-		dispatch = function (_, _, q, type, ...)
-			queue = q
-			if type then
-				MSG[type](...)
-			end
-		end
-	}
-	
-	skynet.start(function()
-		skynet.dispatch("lua", function (_, address, cmd, ...)
-			local f = CMD[cmd]
-			if f then
-				skynet.ret(skynet.pack(f(address, ...)))
-			else
-				skynet.ret(skynet.pack(handler.command(cmd, address, ...)))
-			end
-		end)
-	end)
+            if (connection[fd] == nil ) then
+                return netpack.filter( queue, msg, sz, 1)
+            elseif connection[fd].isconnect then
+                return netpack.filter( queue, msg, sz, connection[fd].iswebsocket_handeshake)
+            end
+            return netpack.filter( queue, msg, sz, 1)
+        end,
+        dispatch = function (_, _, q, type, ...)
+            queue = q
+            if type then
+                MSG[type](...)
+            end
+        end
+    }
+
+    skynet.start(function()
+        skynet.dispatch("lua", function (_, address, cmd, ...)
+            local f = CMD[cmd]
+            if f then
+                skynet.ret(skynet.pack(f(address, ...)))
+            else
+                skynet.ret(skynet.pack(handler.command(cmd, address, ...)))
+            end
+        end)
+    end)
 end
 
 return gateserver
