@@ -3,9 +3,9 @@ package.path = "../skynet/lualib/?.lua;../lualib/?.lua;../examples/?.lua;./?.lua
 skynet_root = "../skynet/"
 app_root = "../"
 
-if _VERSION ~= "Lua 5.3" then
-	error "Use lua 5.3"
-end
+-- if _VERSION ~= "Lua 5.3" then
+-- 	error "Use lua 5.3"
+-- end
 
 local M = {}
 
@@ -69,18 +69,18 @@ local function dispatch_package()
 			break
 		end
 		--粘包分包
-		recvstr=recvstr..v
+		recvstr = recvstr..v
 		if string.len(recvstr) < 2 then
 			return nil
 		end
 		local len = string.unpack("> i2", recvstr)
-		while string.len(recvstr)-2 >= len do
+		while string.len(recvstr) - 2 >= len do
 			local f = string.format("> i2 c%d", len)
 			local len, str = string.unpack(f, recvstr)
 			local cmd, check, msg = protopack.unpack(str)
 			recvstr = string.sub(recvstr, len+1+2, string.len(recvstr))
-	        if cb then 
-				cb(cmd,check,msg)
+	        if cb then
+				cb(cmd, msg)
 			else
 				print("cb == nil")
 			end

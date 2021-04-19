@@ -61,7 +61,7 @@ while true do
 	dispatch_package()
 	local msg = socket.readstdin()
 	if msg then
-		send_request("example.echo", { str = msg })
+		send_request("ddz.create_room", { str = msg })
 	else
 		socket.usleep(2000)
 	end

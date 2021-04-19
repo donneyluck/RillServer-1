@@ -1,12 +1,13 @@
-local w = require "wsclient"
+-- local w = require "wsclient"
+local w = require "tcpclient"
 local uid
 local STATUS = {idel=1, game=2}
 local status = 0
 seed = arg[1] or os.time()
 
 --1-登陆 -> 请求进入房间
-function login_Login(msg)
-	print("onRecv.login_Login")
+function login_loginresult(msg)
+	print("onRecv.login_loginresult")
 	status = STATUS.idel
 	uid = msg.uid
 	--w.send("life.enter_room", {})
@@ -70,8 +71,8 @@ function onTimer()
 	end
 end
 
-function onRecv(msg)
-	funname = string.gsub(msg._cmd, "%.", "_");
+function onRecv(cmd, msg)
+	funname = string.gsub(cmd, "%.", "_");
 	print(funname)
 	if _G[funname] then
 		_G[funname](msg)
@@ -81,9 +82,9 @@ end
 math.randomseed(seed)
 
 w.sleep(math.random(10,20))
-w.connect("127.0.0.1", 8799, onRecv, onTimer)
+w.connect("127.0.0.1", 11798, onRecv, onTimer)
 local account = "robot"..math.random(1,99999999)
-w.login(account, "123456", OnLogin)
-w.start(onRecv)
+w.login(account, "123456")
+w.start()
 
 os.execute("sleep 1")
