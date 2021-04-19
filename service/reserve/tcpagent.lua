@@ -29,7 +29,7 @@ local dispatch
 function default_dispatch(cmd, msg)
     local cb = env.dispatch[cmd]
     if type(cb) ~= "function" then
-        ERROR("====== wsagent default_dispatch not found ========", inspect(account))
+        ERROR("====== tcpagent default_dispatch "..cmd.." not found ========", inspect(account))
         return
     end
     -- DEBUG("%%%%default_dispatch%%%%%%%%", cmd, inspect(msg))
@@ -44,10 +44,9 @@ function default_dispatch(cmd, msg)
 end
 
 function service_dispatch(service_name, cmd, msg)
-    ERROR(inspect(env))
     local service = env.service[service_name]
     if not service then
-        ERROR("====== wsagent service_dispatch cmd not found ========", inspect(account))
+        ERROR("====== tcpagent service_dispatch not found ========", inspect(account))
         return
     end
     local player = env.get_player()

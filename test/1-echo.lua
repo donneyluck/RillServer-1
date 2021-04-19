@@ -13,9 +13,9 @@ local packpb= require "protopackpb"
 local fd = assert(socket.connect("127.0.0.1", 11798))
 
 local function request(name, args, session)
-    print(args)
-    local str = packpb.pack(name,0,args)
-    return str
+	print(args)
+	local str = packpb.pack(name,0,args)
+	return str
 end
 
 local function send_package(fd, pack)
@@ -50,8 +50,8 @@ local function dispatch_package()
 		if not v  or v == "" then
 			break
 		end
-        
-        print("recv: " .. tool.dump(v)) 
+
+		print("recv: " .. tool.dump(v))
 	end
 end
 

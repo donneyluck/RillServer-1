@@ -1,9 +1,9 @@
 package.cpath = "../luaclib/?.so"
 package.path = "../skynet/lualib/?.lua;../lualib/?.lua;../examples/?.lua"
 
-if _VERSION ~= "Lua 5.3" then
-	error "Use lua 5.3"
-end
+-- if _VERSION ~= "Lua 5.3" then
+-- 	error "Use lua 5.3"
+-- end
 
 local M = {}
 

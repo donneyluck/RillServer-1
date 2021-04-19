@@ -27,7 +27,7 @@ init_modules() -- local libmove = require "libmove"
 
 local M = env.dispatch
 local room_id = nil --房间id
-local create_id = nil 
+local create_id = nil
 local lib = nil
 local cur_game=nil
 
@@ -36,19 +36,19 @@ local function cal_lib(game)
 end
 
 
-function M.create_room(msg) 
+function M.create_room(msg)
 	lib = cal_lib(msg.game)
 	if not lib then
 		ERROR("game not found: ", msg.game)
 		msg.error = "game not found"
-		return 
-	end 
-	--create_id = libdbproxy.inc_room()  
+		return
+	end
+	--create_id = libdbproxy.inc_room()
 	create_id=1000000
 	local addr = lib.create(create_id)
 	msg.result=0
-	return msg 
-end 
+	return msg
+end
 
 function M.enter_room(msg)
 	if room_id then
@@ -61,8 +61,8 @@ function M.enter_room(msg)
 	--暂时 这样处理
 	--if not msg.id and create_id then
 	--	msg.id = create_id
-	--end 
-	msg.id=1000000	
+	--end
+	msg.id=100000
 	if not msg.id then
 		ERROR("enter room msg.id is nil")
 		msg.error="msg.id is nil"
@@ -100,7 +100,7 @@ function M.leave_room(msg)
 	end
 
 	local uid = env.get_player().uid
-    if lib.leave(room_id, uid) then
+	if lib.leave(room_id, uid) then
 		room_id = nil
 	end
 	msg.result=0
