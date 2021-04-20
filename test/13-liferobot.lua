@@ -10,7 +10,7 @@ function login_loginresult(msg)
 	print("onRecv.login_loginresult")
 	status = STATUS.idel
 	uid = msg.uid
-	--w.send("life.enter_room", {})
+	w.send("life.enter_room", {})
 	--w.send("example.echo", {str = "echo "..uid})
 end
 
@@ -28,7 +28,6 @@ function life_update_map(msg)
 end
 
 --4-收到同步协议
-
 function life_sync(msg)
 	print("onRecv.life_list")
 	--移动
@@ -64,16 +63,15 @@ end
 
 
 function onTimer()
-	if status == STATUS.idel then
-		if math.random(1, 10*300) < 2 then
-			w.send("life.enter_room", {})
-		end
-	end
+	-- if status == STATUS.idel then
+	-- 	if math.random(1, 10*300) < 2 then
+	-- 		w.send("life.enter_room", {})
+	-- 	end
+	-- end
 end
 
 function onRecv(cmd, msg)
 	funname = string.gsub(cmd, "%.", "_");
-	print(funname)
 	if _G[funname] then
 		_G[funname](msg)
 	end

@@ -22,7 +22,8 @@ local function analysis_file(path)
 		if c > 0 then
 			package = s
 		end
-		local s, c = string.gsub(line, "^%s*message%s*([^%s]+)%s*[{%s].*$", "%1")
+		-- local s, c = string.gsub(line, "^%s*message%s*([^%s]+)%s*[{%s].*$", "%1")
+		local s, c = string.gsub(line, "^%s*message%s*([^%s]+)%s*$", "%1")
 		if c > 0 then
 			local name = package.."."..s
 			local code = crc32.hash(name)
@@ -43,15 +44,10 @@ pbpath = string.sub(path, 1, -5).."proto"  --eg /root/zServer/proto
 lfstool.attrdir(pbpath, function(file)
 	local proto_file = string.match(file, "(.+%.proto)")
 	if proto_file then
-		print("load proto file: "..proto_file)
-		-- pb.import_proto_file(string.sub(file,2))
-		-- assert(pb.load(file))
 		analysis_file(proto_file)
-		-- assert(pb.loadfile(file))
 	end
 	local pb_file = string.match(file, "(.+%.pb)")
 	if pb_file then
-		print("load pb file: "..pb_file)
 		assert(pb.loadfile(pb_file))
 	end
 end)

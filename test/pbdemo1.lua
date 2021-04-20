@@ -6,9 +6,9 @@ local client=require "tcpclient"
 local Hander={}
 
 function login_login(msg)
-	print(msg.error)
+	--print(msg.error)
 	-- if msg.error=="login success" then
-	-- 	client.create_room("ddz")
+	client.create_room("ddz")
 	-- else 
 	-- 	print("account:"..msg.account..",login err:",msg.error)
 	-- end

@@ -7,96 +7,96 @@ local SuitType = {
     Heart =2, --红桃
     Club =3, --梅花
     Diamond = 4, --方块
-	Joker = 5,  --大小王
+    Joker = 5,  --大小王
 }
 
 local CardDisplay = {
-	"A","2","3","4","5","6","7","8","9","10","J","Q","K","Kinglet","King",
+    "A","2","3","4","5","6","7","8","9","10","J","Q","K","Kinglet","King",
 }
 
 
 --花色
 local function get_suit(id)  
-	local bigType = nil
-	if id >= 1 and id <= 13 then
-		bigType = suittype.Diamond
-	elseif id >= 14 and id <= 26 then
-		bigType = suittype.Club
-	elseif id >= 27 and id <= 39 then
-		bigType = suittype.Heart
-	elseif id >= 40 and id <= 52 then
-		bigType = suittype.Spade 
-	elseif id == 53 or id == 54 then
-		bigType = suittype.Joker
-	end
-	return bigType
+    local bigType = nil
+    if id >= 1 and id <= 13 then
+        bigType = suittype.Diamond
+    elseif id >= 14 and id <= 26 then
+        bigType = suittype.Club
+    elseif id >= 27 and id <= 39 then
+        bigType = suittype.Heart
+    elseif id >= 40 and id <= 52 then
+        bigType = suittype.Spade
+    elseif id == 53 or id == 54 then
+        bigType = suittype.Joker
+    end
+    return bigType
 end
 
 --牌号
 local function getdisplay(id)  
-	local display = nil
-	if id >= 1 and id <= 52 then
-		display = CardDisplay[(id-1) % 13 + 1]
-	elseif id == 53 then
-		display = CardDisplay[14]
-	elseif id == 54 then
-		display = CardDisplay[15]
-	end
-	return display
+    local display = nil
+    if id >= 1 and id <= 52 then
+        display = CardDisplay[(id-1) % 13 + 1]
+    elseif id == 53 then
+        display = CardDisplay[14]
+    elseif id == 54 then
+        display = CardDisplay[15]
+    end
+    return display
 end
 
 local function getgrade(id)  --权级
-	local grade = 0
-	if id == 53 then --小王
-		grade = 16
-	elseif id == 54 then 	--大王
-		grade = 17
-	else 
-		local modResult = id % 13
-		if modResult == 1 then -- A
-			grade = 14
-		elseif modResult == 2 then -- 2
-			grade = 15
-		elseif modResult >= 3 and modResult < 13 then  -- 3到Q
-			grade = modResult
-		elseif modResult == 0 then --K
-			grade = 13
-		end
+    local grade = 0
+    if id == 53 then --小王
+        grade = 16
+    elseif id == 54 then    --大王
+        grade = 17
+    else
+        local modResult = id % 13
+        if modResult == 1 then -- A
+            grade = 14
+        elseif modResult == 2 then -- 2
+            grade = 15
+        elseif modResult >= 3 and modResult < 13 then  -- 3到Q
+            grade = modResult
+        elseif modResult == 0 then --K
+            grade = 13
+        end
     end
     return grade
 end 
 
 local function getupcard(display)  
-	-- local display = nil
-	-- if id >= 1 and id <= 52 then
-	-- 	display = CardDisplay[(id-1) % 13 + 1]
-	-- elseif id == 53 then
-	-- 	display = CardDisplay[14]
-	-- elseif id == 54 then
-	-- 	display = CardDisplay[15]
-	-- end
-	-- return display
+    -- local display = nil
+    -- if id >= 1 and id <= 52 then
+    --      display = CardDisplay[(id-1) % 13 + 1]
+    -- elseif id == 53 then
+    --      display = CardDisplay[14]
+    -- elseif id == 54 then
+    --      display = CardDisplay[15]
+    -- end
+    -- return display
 end
 
 
 
 local function getgrade(id)  --权级
-	local grade = 0
-	if id == 53 then --小王
-		grade = 16
-	elseif id == 54 then 	--大王
-		grade = 17
-	else 
-		local modResult = id % 13
-		if modResult == 1 then -- A
-			grade = 14
-		elseif modResult == 2 then -- 2
-			grade = 15
-		elseif modResult >= 3 and modResult < 13 then  -- 3到Q
-			grade = modResult
-		elseif modResult == 0 then --K
-			grade = 13
-		end
+    local grade = 0
+    if id == 53 then --小王
+        grade = 16
+    elseif id == 54 then    --大王
+        grade = 17
+    else
+        local modResult = id % 13
+        if modResult == 1 then -- A
+            grade = 14
+        elseif modResult == 2 then -- 2
+            grade = 15
+        elseif modResult >= 3 and modResult < 13 then  -- 3到Q
+            grade = modResult
+        elseif modResult == 0 then --K
+            grade = 13
+        end
     end
     return grade
 end
