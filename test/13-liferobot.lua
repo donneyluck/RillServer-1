@@ -5,14 +5,19 @@ local STATUS = {idel=1, game=2}
 local status = 0
 seed = arg[1] or os.time()
 
---1-登陆 -> 请求进入房间
+--1-登陆 -> 请求创建房间
 function login_loginresult(msg)
 	print("onRecv.login_loginresult")
 	status = STATUS.idel
 	uid = msg.uid
-	w.send("enter_room_req", {game = "move"})
+	w.send("create_room_req", {game = "move"})
 	--w.send("example.echo", {str = "echo "..uid})
 end
+
+function create_room_resp(msg)
+	w.send("enter_room_req", {})
+end
+
 
 --2-进入房间
 function life_enter_room(msg)

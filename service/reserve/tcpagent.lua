@@ -58,6 +58,7 @@ function service_dispatch(service_name, cmd, msg)
 end
 
 function dispatch(_, _, str)
+    skynet.ignoreret()-- session is fd, don't call skynet.ret
     local cmd, check, msg = protopack.unpack(str)
     local cmdlist = string.split(cmd, ".") 
     local length = #cmdlist

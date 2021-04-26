@@ -48,6 +48,12 @@ function M.create_room_req(msg)
 	end
 	--create_id = libdbproxy.inc_room()
 	create_id=1000000
+
+	local isok = lib.create(create_id)
+	if not isok then
+		resp.ret_code = -2
+	end
+
 	return resp
 end
 
