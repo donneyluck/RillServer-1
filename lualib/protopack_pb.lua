@@ -14,7 +14,7 @@ local code2name = {}
 local function analysis_file(path)
 	local file = io.open(path, "r") 
 	local package = ""
-
+	local name = ""
 	for line in file:lines() do
 		local s, c = string.gsub(line, "^%s*package%s*([%w%.]+).*$", "%1")
 		if c > 0 then
@@ -22,7 +22,12 @@ local function analysis_file(path)
 		end
 		local s, c = string.gsub(line, "^%s*message%s*([^%s]+)%s*$", "%1")
 		if c > 0 then
-			local name = package.."."..s
+			if package == "" then
+				name = s;
+			else
+				name = package.."."..s
+			end
+			-- local name = package.."."..s
 			local code = crc32.hash(name)
 			print(string.format("analysis proto file:%s->%d(%x)", name, code, code))
 			name2code[name] = code

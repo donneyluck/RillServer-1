@@ -36,18 +36,19 @@ local function cal_lib(game)
 end
 
 
-function M.create_room(msg)
+function M.create_room_req(msg)
+	local resp = {}
+	resp._cmd = "create_room_resp"
+	resp._check = 0
 	lib = cal_lib(msg.game)
 	if not lib then
 		ERROR("game not found: ", msg.game)
-		msg.error = "game not found"
+		resp.ret_code = -1;
 		return
 	end
 	--create_id = libdbproxy.inc_room()
 	create_id=1000000
-	local addr = lib.create(create_id)
-	msg.result=0
-	return msg
+	return resp
 end
 
 function M.enter_room(msg)

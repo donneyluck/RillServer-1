@@ -10,7 +10,7 @@ function login_loginresult(msg)
 	print("onRecv.login_loginresult")
 	status = STATUS.idel
 	uid = msg.uid
-	w.send("life.enter_room", {})
+	w.send("create_room_req", {game = "move"})
 	--w.send("example.echo", {str = "echo "..uid})
 end
 

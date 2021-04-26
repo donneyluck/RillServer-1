@@ -1,8 +1,18 @@
 syntax = "proto3";
-package life ;
+
+message create_room_req
+{
+    string game = 1;
+}
+
+message create_room_resp
+{
+    int32 ret_code = 1;
+}
 
 message enter_room
 {
+    int32 room_id = 1;
 }
 
 message update_map
