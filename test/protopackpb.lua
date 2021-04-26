@@ -67,10 +67,11 @@ end)
 -- 	str = "232313"
 -- }
 
+-- 打印pb
+-- for name, basename, type in pb.types() do
+--   print(name, basename, type)
+-- end
 
-for name, basename, type in pb.types() do
-  print(name, basename, type)
-end
 -- 序列化成二进制数据
 -- local data = assert(pb.encode("login.login", login))
 
@@ -80,7 +81,7 @@ end
 
 --打印二进制string，用于调试
 local function bin2hex(s)
-	s=string.gsub(s,"(.)",function (x) return string.format("%02X ",string.byte(x)) end)
+	s = string.gsub(s,"(.)",function (x) return string.format("%02X ",string.byte(x)) end)
 	return s
 end
 

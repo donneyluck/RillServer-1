@@ -10,11 +10,24 @@ message create_room_resp
     int32 ret_code = 1;
 }
 
-message enter_room
+message enter_room_req
 {
-    int32 room_id = 1;
+    string game = 1;
+    int32 room_id = 2;
 }
+
+message enter_room_resp
+{
+    int32 ret_code = 1;
+}
+
 
 message update_map
 {
+
+}
+
+message item_list
+{
+
 }

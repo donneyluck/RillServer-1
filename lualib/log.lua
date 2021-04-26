@@ -25,7 +25,7 @@ local function init_log_level()
 end
 
 local function logmsg(loglevel, format, ...)
-	local n = logger._name and string.format("[%s:] ", logger._name) or ""
+    local n = logger._name and string.format("[%s] ", logger._name) or ""
     skynet.error(n..string.format(format, ...))
 end
 

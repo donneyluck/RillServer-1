@@ -7,7 +7,7 @@ local dispatch = module.dispatch
 local forward = module.forward
 local event = module.event
 
-env.users = env.users or {} 
+env.users = env.users or {}
 --users[uid]={
 	--node = skynet.getenv("nodename"),
 	--fd = fd,
@@ -51,20 +51,20 @@ function dispatch.register(uid, data)
 		log.debug("center %d register fail, not user", uid)
 		return false
 	end
-	
+
 	if user.key ~= data.key then
 		log.debug("center %d register fail, key err", uid)
 		return false
 	end
-	
+
 	if user.agent then
 		log.debug("center %d register fail, has game", uid)
 		return false
 	end
-	
+
 	log.debug("center register: %d", uid)
 	user.agent = data.agent
-	
+
 	return true
 end
 
@@ -74,7 +74,7 @@ function dispatch.logout(uid, key, season)
 	if not user then
 		return true
 	end
-	
+
 	if user.key ~= key then
 		log.debug("center logout key fail")
 		return false
@@ -95,9 +95,9 @@ function dispatch.logout(uid, key, season)
 		-- 	return false
 		-- end
 	end
-	
+
 	env.users[uid] = nil
-	DEBUG("++++++++++center logout uid: ", uid, "++++++++++++++")
+	debug("++++++++++center logout uid: ", uid, "++++++++++++++")
 	return true
 end
 

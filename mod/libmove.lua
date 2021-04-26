@@ -13,25 +13,25 @@ local function fetch_global(id)
 end
 
 local function call(cmd, id, ...)
-	local global = fetch_global(id)
-	return skynet.call(global, "lua", cmd, id, ...)
+    local global = fetch_global(id)
+    return skynet.call(global, "lua", cmd, id, ...)
 end
 
 
 function M.create(id)
-	return call("movegame.create", id)
+    return call("movegame.create", id)
 end
 
 function M.enter(id, uid, data)
-	return call("movegame.enter", id, uid, data)
+    return call("movegame.enter", id, uid, data)
 end
 
 function M.leave(id, uid)
-	return call("movegame.leave", id, uid)
+    return call("movegame.leave", id, uid)
 end
 
 function M.get_forward(id)
-	return fetch_global(id)
+    return fetch_global(id)
 end
 
 

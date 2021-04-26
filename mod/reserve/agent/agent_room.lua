@@ -43,7 +43,7 @@ function M.create_room_req(msg)
 	lib = cal_lib(msg.game)
 	if not lib then
 		ERROR("game not found: ", msg.game)
-		resp.ret_code = -1;
+		resp.ret_code = -1
 		return
 	end
 	--create_id = libdbproxy.inc_room()
@@ -51,24 +51,28 @@ function M.create_room_req(msg)
 	return resp
 end
 
-function M.enter_room(msg)
+function M.enter_room_req(req)
+	local resp = {}
+	resp._cmd = "enter_room_resp"
+	resp._check = 0
 	if room_id then
 		INFO("enter room fail, already in room")
-		return msg
+		resp.ret_code = -1
+		return resp
 	end
 	if not lib then
-		lib=cal_lib(msg.game)
+		lib = cal_lib(req.game)
 	end
 	--暂时 这样处理
 	--if not msg.id and create_id then
 	--	msg.id = create_id
 	--end
-	msg.id=100000
-	if not msg.id then
+	req.room_id = 100000
+	if not req.room_id then
 		ERROR("enter room msg.id is nil")
-		msg.error="msg.id is nil"
-		msg.result=-1
-		return msg
+		-- msg.error="msg.id is nil"
+		resp.ret_code = -2
+		return resp
 	end
 
 	local data = {
@@ -76,21 +80,22 @@ function M.enter_room(msg)
 		agent = skynet.self(),
 		node = node,
 	}
-	local isok, forward, data = lib.enter(msg.id, data)
+	local isok, forward, data = lib.enter(req.room_id, data)
 	if isok then
-		cur_game=msg.game
-		msg.result = 0
-		room_id = msg.id
+		cur_game = req.game
+		-- req.result = 0
+		room_id = req.room_id
 	else
 		if forward then
-			msg.code=forward
+			req.code = forward
 		end
-		msg.result = 1
+		-- req.result = 1
+		resp.ret_code = -3
 	end
-	return msg
+	return resp
 end
 
-function M.leave_room(msg)
+function M.leave_room(req)
 	if not room_id then
 		msg.error="not found room"
 		msg.result=-1
