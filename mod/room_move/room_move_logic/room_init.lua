@@ -5,7 +5,6 @@ local libcenter = require "libcenter"
 
 function RoomMove:initialize()
     DEBUG("=============RoomMove Init=================")
-
     self._players = {}
 end
 

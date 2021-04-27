@@ -20,6 +20,7 @@ function dispatch.create(room_id)
 	local addr = skynet.newservice("room_move", "room_move", room_id)
 	skynet.call(addr, "lua", "room_api.start", "hello world")
 	Room_Map[room_id] = {room_id = room_id, addr = addr,}
+	INFO(inspect(Room_Map))
 	return true
 end
 

@@ -47,7 +47,7 @@ function M.create_room_req(msg)
 		return
 	end
 	--create_id = libdbproxy.inc_room()
-	create_id=1000000
+	create_id = 100000
 
 	local isok = lib.create(create_id)
 	if not isok then

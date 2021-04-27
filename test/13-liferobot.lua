@@ -5,7 +5,7 @@ local STATUS = {idel=1, game=2}
 local status = 0
 seed = arg[1] or os.time()
 
---1-登陆 -> 请求创建房间
+--1. login success -> create room
 function login_loginresult(msg)
 	print("onRecv.login_loginresult")
 	status = STATUS.idel
@@ -14,20 +14,21 @@ function login_loginresult(msg)
 	--w.send("example.echo", {str = "echo "..uid})
 end
 
+--2. create room success -> enter room
 function create_room_resp(msg)
-	w.send("enter_room_req", {})
+	w.send("enter_room_req", {game = "move"})
 end
 
 
---2-进入房间
-function life_enter_room(msg)
-	status = STATUS.game
-	w.send("life.update_map", {})
-	w.send("life.list", {""})
-	print("onRecv.life_enter_room")
+--3. enter room success -> update map
+function enter_room_resp(msg)
+	-- status = STATUS.game
+	-- w.send("life.update_map", {})
+	-- w.send("life.list", {""})
+	-- print("onRecv.life_enter_room")
 end
 
---3-收到地图信息
+--4. update map ok -> start move
 function life_update_map(msg)
 	print("onRecv.update_map")
 end
@@ -44,7 +45,7 @@ function life_sync(msg)
 	if math.random(1,100) < 5 then
 		rmsg.action = 1
 	end
-	
+
 	if rmsg.x or rmsg.action then
 		w.send("life.input", rmsg)
 	end
